@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+  gen-db:
+    cmds:
+      - sqlc generate
+    desc: Generate SQLC code
+  start-api:
+    cmds:
+      # - defer: kill -9 $(lsof -t -i:1323)
+      - go run ./api/cmd/main.go
+    desc: Start API server
+    # sources:
+    #   - ./api/**/*.go
+    #   - ./internal/**/*.go
+    watch: false
+    ignore_error: true
