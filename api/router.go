@@ -2,6 +2,7 @@ package api
 
 import (
 	"c-ademy/api/authn"
+	"c-ademy/internal/config"
 	"c-ademy/internal/db"
 	"c-ademy/internal/db/sqlc"
 	vmmanager "c-ademy/internal/vm_manager"
@@ -16,7 +17,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GetRouter() *echo.Echo {
+func GetRouter(config *config.Environment) *echo.Echo {
 	e := echo.New()
 
 	// Configure logger
@@ -24,7 +25,7 @@ func GetRouter() *echo.Echo {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 
-	db, err := db.New("file:database.db")
+	db, err := db.New(config.DbPath)
 	if err != nil {
 		e.Logger.Fatal(err)
 	}
