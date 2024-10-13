@@ -1,0 +1,30 @@
+name: Build API
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'  # Specify the Go version you're using
+
+    - name: Build API
+      run: |
+        mkdir bin/app
+        go build -v -o bin/app api/cmd/main.go 
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: api-binary
+        path: bin/app
