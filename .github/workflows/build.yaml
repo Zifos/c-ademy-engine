@@ -1,4 +1,4 @@
-name: Build API
+name: Build API and Notify Discord
 
 on:
   push:
@@ -27,3 +27,16 @@ jobs:
       with:
         name: api-binary
         path: bin/app
+
+    - name: Get artifact URL
+      id: get_artifact_url
+      run: |
+        ARTIFACT_URL=$(echo ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        echo "::set-output name=url::$ARTIFACT_URL"
+
+    - name: Send Discord Notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'New artifact available: ${{ steps.get_artifact_url.outputs.url }}'
