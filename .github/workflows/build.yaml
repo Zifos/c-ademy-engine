@@ -1,0 +1,42 @@
+name: Build API and Notify Discord
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23'  # Specify the Go version you're using
+
+    - name: Build API
+      run: |
+        go build -v -o bin/app api/cmd/main.go 
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: api-binary
+        path: bin/app
+
+    - name: Get artifact URL
+      id: get_artifact_url
+      run: |
+        ARTIFACT_URL=$(echo ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        echo "::set-output name=url::$ARTIFACT_URL"
+
+    - name: Send Discord Notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'New artifact available: ${{ steps.get_artifact_url.outputs.url }}'
