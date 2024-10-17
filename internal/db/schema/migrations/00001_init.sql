@@ -1,4 +1,7 @@
--- Allowlist table (unchanged)
+-- +goose Up
+-- SQL in this section is executed when the migration is applied.
+
+-- Allowlist table
 CREATE TABLE allowlist (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
@@ -6,7 +9,7 @@ CREATE TABLE allowlist (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Users table (unchanged)
+-- Users table
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
@@ -15,7 +18,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- API tokens table (unchanged)
+-- API tokens table
 CREATE TABLE api_tokens (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -25,7 +28,7 @@ CREATE TABLE api_tokens (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Executions table (updated)
+-- Executions table
 CREATE TABLE executions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -42,10 +45,10 @@ CREATE TABLE executions (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Index for faster token lookups (unchanged)
+-- Index for faster token lookups
 CREATE INDEX idx_api_tokens_token ON api_tokens(token);
 
--- Trigger to update the updated_at timestamp for users (unchanged)
+-- Trigger to update the updated_at timestamp for users
 CREATE TRIGGER update_user_timestamp 
 AFTER UPDATE ON users
 FOR EACH ROW
@@ -53,7 +56,7 @@ BEGIN
     UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
 END;
 
--- Trigger to ensure only allowlisted usernames can be used for registration (unchanged)
+-- Trigger to ensure only allowlisted usernames can be used for registration
 CREATE TRIGGER check_user_allowlist
 BEFORE INSERT ON users
 FOR EACH ROW
@@ -71,3 +74,15 @@ FOR EACH ROW
 BEGIN
     UPDATE executions SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
 END;
+
+-- +goose Down
+-- SQL in this section is executed when the migration is rolled back.
+
+DROP TRIGGER IF EXISTS update_execution_timestamp;
+DROP TRIGGER IF EXISTS check_user_allowlist;
+DROP TRIGGER IF EXISTS update_user_timestamp;
+DROP INDEX IF EXISTS idx_api_tokens_token;
+DROP TABLE IF EXISTS executions;
+DROP TABLE IF EXISTS api_tokens;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS allowlist;

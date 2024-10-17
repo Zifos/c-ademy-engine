@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+  "name": "Go Development Container",
+  "image": "mcr.microsoft.com/devcontainers/go:1",
+  "features": {
+      "ghcr.io/devcontainers/features/go:1": {}
+  },
+  "customizations": {
+      "vscode": {
+          "extensions": [
+              "golang.go",
+              "streetsidesoftware.code-spell-checker"
+          ]
+      }
+  },
+  "postCreateCommand": "sh ./hack/install.sh",
+  "appPort": 1323,
+  "remoteUser": "vscode"
+}
