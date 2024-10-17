@@ -49,14 +49,17 @@ CREATE TABLE executions (
 CREATE INDEX idx_api_tokens_token ON api_tokens(token);
 
 -- Trigger to update the updated_at timestamp for users
+-- +goose StatementBegin
 CREATE TRIGGER update_user_timestamp 
 AFTER UPDATE ON users
 FOR EACH ROW
 BEGIN
     UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
 END;
+-- +goose StatementEnd
 
 -- Trigger to ensure only allowlisted usernames can be used for registration
+-- +goose StatementBegin
 CREATE TRIGGER check_user_allowlist
 BEFORE INSERT ON users
 FOR EACH ROW
@@ -66,14 +69,17 @@ BEGIN
         THEN RAISE(ABORT, 'Username not in allowlist or not allowed')
     END;
 END;
+-- +goose StatementEnd
 
 -- Trigger to update the updated_at timestamp for executions
+-- +goose StatementBegin
 CREATE TRIGGER update_execution_timestamp 
 AFTER UPDATE ON executions
 FOR EACH ROW
 BEGIN
     UPDATE executions SET updated_at = CURRENT_TIMESTAMP WHERE id = OLD.id;
 END;
+-- +goose StatementEnd
 
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.

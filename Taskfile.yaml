@@ -1,17 +1,20 @@
 version: '3'
 
 tasks:
+  task-setup:
+    cmds:
+      - go mod tidy
+      - go mod vendor
+      - sh ./hack/install.sh
+    desc: Setup the project
   gen-db:
     cmds:
       - sqlc generate
     desc: Generate SQLC code
+  db-up:
+    cmds:
+      - goose -dir ./internal/db/schema/migrations sqlite3 ./c-ademy.db up
   start-api:
     cmds:
-      # - defer: kill -9 $(lsof -t -i:1323)
       - go run ./api/cmd/main.go
     desc: Start API server
-    # sources:
-    #   - ./api/**/*.go
-    #   - ./internal/**/*.go
-    watch: false
-    ignore_error: true

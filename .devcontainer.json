@@ -8,9 +8,11 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "golang.go",
-                "streetsidesoftware.code-spell-checker"
-            ]
+                "golang.go"
+            ],
+            "settings": {
+                "workbench.colorTheme": "Default Dark Modern"
+            }
         }
     },
     "postCreateCommand": "sh ./hack/install.sh",

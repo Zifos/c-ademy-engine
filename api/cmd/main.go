@@ -36,13 +36,6 @@ func init() {
 		log.Fatalf("cannot create schema manager: %v", err)
 	}
 
-	// Create the schema
-	err = schemaManager.CreateSchema()
-
-	if err != nil {
-		log.Fatalf("cannot create schema: %v", err)
-	}
-
 	environment := os.Getenv("ENVIRONMENT")
 	if environment != "production" {
 		// Populate the database with some data
