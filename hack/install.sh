@@ -10,5 +10,6 @@ go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 go install github.com/pressly/goose/v3/cmd/goose@latest
 
 # Install sqlc if not already installed
-go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
 
