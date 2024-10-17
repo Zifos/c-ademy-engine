@@ -15,7 +15,7 @@
             }
         }
     },
-    "postCreateCommand": "sh ./hack/install.sh",
+    "postCreateCommand": "sh ./hack/install.sh & task migrate",
     "appPort": 1323,
     "remoteUser": "vscode"
   }
